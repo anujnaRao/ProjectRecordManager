@@ -1,57 +1,65 @@
-from django.contrib.auth.base_user import BaseUserManager
-from django.utils.translation import ugettext_lazy as _
+# from django.contrib.auth.base_user import BaseUserManager
+# from django.utils.translation import ugettext_lazy as _
 
 
-class CustomUserManager(BaseUserManager):
+# class CustomUserManager(BaseUserManager):
 
-    def create_user(self, email, password, **extra_fields):
-        """
-        Create and save a User with the given email and password.
-        """
-        if not email:
-            raise ValueError(_('The Email must be set'))
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save()
-        return user
+#     def create_user(self, email, password, **extra_fields):
+#         """
+#         Create and save a User with the given email and password.
+#         """
+#         if not email:
+#             raise ValueError(_('The Email must be set'))
+#         extra_fields.setdefault('is_student', False)
+#         extra_fields.setdefault('is_faculty', False)
+#         extra_fields.setdefault('is_student_available', False)
+#         extra_fields.setdefault('is_faculty_available', False)
+#         email = self.normalize_email(email)
+#         user = self.model(email=email, **extra_fields)
+#         user.set_password(password)
+#         user.save()
+#         return user
 
-    def create_superuser(self, email, password, **extra_fields):
-        """
-        Create and save a SuperUser with the given email and password.
-        """
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
+#     def create_superuser(self, email, password, **extra_fields):
+#         """
+#         Create and save a SuperUser with the given email and password.
+#         """
+#         extra_fields.setdefault('is_staff', True)
+#         extra_fields.setdefault('is_superuser', True)
+#         extra_fields.setdefault('is_active', True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError(_('Superuser must have is_staff=True.'))
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError(_('Superuser must have is_superuser=True.'))
-        return self.create_user(email, password, **extra_fields)
-
-
-class StudentManager(BaseUserManager):
-
-    def create_student(self, email, password, **extra_fields):
-        extra_fields.setdefault('is_active', True)
-        if not email:
-            raise ValueError(_('The Email must be set'))
-        email = self.normalize_email(email)
-        student = self.model(email=email, **extra_fields)
-        student.set_password(password)
-        student.save()
-        return student
+#         if extra_fields.get('is_staff') is not True:
+#             raise ValueError(_('Superuser must have is_staff=True.'))
+#         if extra_fields.get('is_superuser') is not True:
+#             raise ValueError(_('Superuser must have is_superuser=True.'))
+#         return self.create_user(email, password, **extra_fields)
 
 
-class FacultyManager(BaseUserManager):
+# class StudentManager(BaseUserManager):
 
-    def create_faculty(self, email, password, **extra_fields):
-        extra_fields.setdefault('is_active', True)
-        if not email:
-            raise ValueError(_('The Email must be set'))
-        email = self.normalize_email(email)
-        faculty = self.model(email=email, **extra_fields)
-        faculty.set_password(password)
-        faculty.save()
-        return faculty
+#     def create_student(self, email, password, **extra_fields):
+#         extra_fields.setdefault('is_active', True)
+#         extra_fields.setdefault('is_student', True)
+#         extra_fields.setdefault('is_student_available', False)
+#         if not email:
+#             raise ValueError(_('The Email must be set'))
+#         email = self.normalize_email(email)
+#         student = self.model(email=email, **extra_fields)
+#         student.set_password(password)
+#         student.save()
+#         return student
+
+
+# class FacultyManager(BaseUserManager):
+
+#     def create_faculty(self, email, password, **extra_fields):
+#         extra_fields.setdefault('is_active', True)
+#         extra_fields.setdefault('is_faculty', True)
+#         extra_fields.setdefault('is_faculty_available', False)
+#         if not email:
+#             raise ValueError(_('The Email must be set'))
+#         email = self.normalize_email(email)
+#         faculty = self.model(email=email, **extra_fields)
+#         faculty.set_password(password)
+#         faculty.save()
+#         return faculty

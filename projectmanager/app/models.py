@@ -2,14 +2,58 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from tinymce.models import HTMLField
+from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
 
-from .managers import CustomUserManager, StudentManager, FacultyManager
+
+class UserManager(BaseUserManager):
+
+    def create_user(self, email, password, is_active=True, is_staff=False, is_superuser=False,
+                    is_student=False, is_faculty=False, is_faculty_available=False, is_student_available=False, **extra_fields):
+        """
+        Create and save a User with the given email and password.
+        """
+        if not email:
+            raise ValueError(_('The Email must be set'))
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.admin = is_superuser
+        user.active = is_active
+        user.staff = is_staff
+        user.isstudent = is_student
+        user.isfaculty = is_faculty
+        user.student_available = is_student_available
+        user.faculty_available = is_faculty_available
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, email, password, **extra_fields):
+        """
+        Create and save a SuperUser with the given email and password.
+        """
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Superuser must have is_staff=True.'))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Superuser must have is_superuser=True.'))
+        return self.create_user(email, password, **extra_fields)
 
 
-class CustomUser(AbstractUser):
+
+class CustomUser(AbstractBaseUser,PermissionsMixin):
     username = None
     first_name = None
     last_name = None
+    admin = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+    staff = models.BooleanField(default=False)
+    isstudent = models.BooleanField(default=False)
+    isfaculty = models.BooleanField(default=False)
+    student_available = models.BooleanField(default=False)
+    faculty_available = models.BooleanField(default=False)
     email = models.EmailField(_('email address'), unique=True)
 
     USERNAME_FIELD = 'email'
@@ -18,10 +62,38 @@ class CustomUser(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    objects = CustomUserManager()
+    objects = UserManager()
 
     def __str__(self):
         return self.email
+    
+    @property
+    def is_staff(self):
+        return self.staff
+
+    @property
+    def is_active(self):
+        return self.active
+
+    @property
+    def is_superuser(self):
+        return self.admin
+
+    @property
+    def is_student(self):
+        return self.isstudent
+    
+    @property
+    def is_faculty(self):
+        return self.isfaculty
+    
+    @property
+    def is_faculty_available(self):
+        return self.faculty_available
+    
+    @property
+    def is_student_available(self):
+        return self.student_available
 
 
 class Faculty(CustomUser):
@@ -30,7 +102,7 @@ class Faculty(CustomUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['phone']
 
-    objects = FacultyManager()
+    objects = UserManager()
 
     def __str__(self):
         return self.name + ' ' + self.email
@@ -39,17 +111,24 @@ class Faculty(CustomUser):
         db_table = "faculty"
 
 
+class Batch(models.Model):
+    batch_name = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.batch_name
+
+
 class Student(CustomUser):
     usn = models.CharField(max_length=15, null=True, unique = True, default='1R')
     phone = models.CharField(max_length=11, null=True)
     section = models.CharField(max_length=5, null=True)
-    batch = models.CharField(max_length=5, default='A')
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
     
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['usn', 'phone']
 
-    objects = StudentManager()
+    objects = UserManager()
 
     def __str__(self):
         return self.name + ' ' + self.usn

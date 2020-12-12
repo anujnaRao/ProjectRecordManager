@@ -1,78 +1,127 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content="Project Record Manager"/>
-    <meta name="author" content="Astrid"/>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Project Record Manager" />
+    <meta name="author" content="Astrid" />
     {% block title %} <title></title> {% endblock %}
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
     {% block useCss %} {% endblock %}
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
-          crossorigin="anonymous"/>
+        crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"
-            crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"
-          />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-          />
+        crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" />
 </head>
+
 <body>
     <!--  Navbar start-->
-    <nav class="navbar navbar-expand-lg navbar-inverse bg-dark">
-        <a class="navbar-brand" href= "{% url 'index' %}">
-          <img src="{% static 'images/logo/logo3.png' %}" alt="logo" width="40px" class="img img-fluid"/>PRM</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url 'index' %}"
+                    style="text-decoration: none; color:royalblue; font-family: Verdana, Geneva, Tahoma, sans-serif;">
+                    <img src="{% static 'images/logo/logo2.png' %}" alt="logo" width="30px" class="img img-fluid" />
+                    PROJECT RECORD MANAGER</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item mr-3">
+                        {% if request.user.is_student %}
+                        <h5 style="text-decoration: none; color:royalblue;">{{ user.name }}</h5>
+                        {% endif %}
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-0 ml-auto">
-            <li class="nav-item dropdown">
-              <a class="nav-link" href="{% url 'register' %}">
-                <em class="fas fa-user-plus"></em>&nbsp;Register</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'signin' %}"><em class="fas fa-sign-in-alt"></em>&nbsp;Sign in</a>
-            </li>
-          </ul>
+                        {% if request.user.is_faculty %}
+                        <h5 style="text-decoration: none; color:royalblue;">{{ user.name }}</h5>
+                        {% endif %}
+                    </li>
+                    <li class="nav-item">
+                        {% if request.user.is_authenticated %}
+                        <a class="mr-2" href={% url 'logout' %} style="text-decoration: none; color:royalblue;">
+                            <span class="fas fa-sign-out-alt"></span>&nbsp;Logout
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        {% else %}
+                        <a class="mr-3" href={% url 'login' %} style="text-decoration: none; color:royalblue;">
+                            <span class="fas fa-sign-in-alt"></span>&nbsp;Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="mr-3" href={% url 'facultyRegistration' %}
+                            style="text-decoration: none; color:royalblue">
+                            <span class="fas fa-plus"></span>&nbsp;Faculty
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="" href={% url 'studentRegistration' %}
+                            style="text-decoration: none; color: royalblue">
+                            <span class="fas fa-plus"></span>&nbsp;Student
+                        </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
         </div>
-      </nav>
+
+    </nav>
 
 
     <!-- navbar end -->
-  <!-- main block -->
-  {% block content %}
+    <!-- main block -->
+    {% block content %}
 
     {% endblock %}
     <!--  main block end  -->
 
-    <div class="footer fixed-bottom">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-4 offset-1 col-sm-2">
-                    <h5>Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#" to='/menu'>Menu</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="col-7 col-sm-5">
-                    <h5>Our Address</h5>
-                    
-                </div>
+    <br>
+
+    <footer class="container-fluid bg-dark p-2 fixed-bottom">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="#"><span class="fas fa-home"></span>&nbsp;Home</a> &nbsp;
+                <a href="#"><span class="fas fa-book-open"></span>&nbsp;Testimonials</a>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-auto">
-                    <p>© Copyright MCA RVCE 2020</p>
-                </div>
+            <div class="col-md-6 text-right text-white">
+                <span>© Copyright MCA RVCE 2020</span>
             </div>
         </div>
-    </div>
+    </footer>
 
-  </body>
+    <!-- <div class="row mb-0">
+            <div class="col-7 col-sm-8 ml-4 text-center" style="border-right:1px dashed white ;">
+                <h5 class="text-white">Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#"><span class="fas fa-home"></span>&nbsp;Home</a></li>
+                    <li><a href="#"><span class="fas fa-info-circle"></span>&nbsp;About Us</a></li>
+                    <li><a href="#"><span class="fas fa-address-book"></span>&nbsp;Contact Us</a></li>
+                    <li><a href="#"><span class="fas fa-book-open"></span>&nbsp;Testimonials</a></li>
+                </ul>
+
+            </div>
+            <div class="col-4 col-sm-3 text-white">
+                <p>© Copyright MCA RVCE 2020</p>
+            </div>
+        </div> -->
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+
+</body>
+
 </html>

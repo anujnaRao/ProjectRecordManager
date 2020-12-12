@@ -4,9 +4,10 @@ from app import views
 urlpatterns = [
     path('',views.Homepage.as_view(), name="index"),
     path('tinymce/', include('tinymce.urls')),
-    path('login/',views.LoginPage.as_view(), name="login"),
-    path('register/',views.RegisterPage.as_view(), name="register"),
+    path('login/',views.Login, name="login"),
     path('facultyRegister/', views.facultyRegistration, name="facultyRegistration"),
-    path('dash/',views.Dashboard.as_view(), name="dash"),
-    path('logout/',views.LogoutPage.as_view(), name="logout"),
+    path('studentRegister/', views.studentRegistration, name="studentRegistration"),
+    path('studentdash/',views.Dashboard.as_view(), name="studentDashboard"),
+    path('facultydash/',views.Dashboard.as_view(), name="facultyDashboard"),
+    path('logout/',views.logout, name="logout"),
 ]
