@@ -2,6 +2,7 @@ from django import forms
 
 from django.contrib.auth.forms import UserCreationForm
 from .models import Faculty, Student, Project, Team
+from tinymce.widgets import TinyMCE
 
 
 class CheckboxInput(forms.CheckboxInput):
@@ -40,11 +41,13 @@ class ExtendedFacultyCreationForm(UserCreationForm):
         "placeholder": "Confirm password"
     }))
 
-    isfaculty = forms.BooleanField(widget=CheckboxInput(default=True), required=False)
+    isfaculty = forms.BooleanField(
+        widget=CheckboxInput(default=True), required=False)
 
     class Meta:
         model = Faculty
-        fields = ['email', 'phone', 'name', 'password1', 'password2', 'isfaculty']
+        fields = ['email', 'phone', 'name',
+                  'password1', 'password2', 'isfaculty']
 
 
 class ExtendedStudentCreationForm(UserCreationForm):
@@ -76,15 +79,29 @@ class ExtendedStudentCreationForm(UserCreationForm):
         "placeholder": "Confirm password"
     }))
 
-    isstudent = forms.BooleanField(widget=CheckboxInput(default=True), required=False)
+    isstudent = forms.BooleanField(
+        widget=CheckboxInput(default=True), required=False)
 
     class Meta:
         model = Student
-        fields = ['email', 'phone', 'name', 'password1', 'password2', 'usn', 'batch', 'section', 'isstudent']
+        fields = ['email', 'phone', 'name', 'password1',
+                  'password2', 'usn', 'batch', 'section', 'isstudent']
 
 
 class ProjectForm(forms.ModelForm):
+    synopsis = forms.CharField(
+        label="Synopsis", widget=TinyMCE(attrs={'cols': 50, 'rows': 10, "class": "form-control",
+                                                "placeholder": "Synopsis details"}))
+    phase1 = forms.CharField(
+        label="Phase 1", widget=TinyMCE(attrs={'cols': 50, 'rows': 10, "class": "form-control",
+                                               "placeholder": "Phase 1 details"}))
+    phase2 = forms.CharField(
+        label="Phase 2", widget=TinyMCE(attrs={'cols': 50, 'rows': 10, "class": "form-control",
+                                               "placeholder": "Phase 2 details"}))
+    fianle = forms.CharField(
+        label="Final Phase", widget=TinyMCE(attrs={'cols': 50, 'rows': 10, "class": "form-control",
+                                                   "placeholder": "Enter Final phase details"}))
 
     class Meta:
         model = Project
-        fields = ['project_title']
+        fields = ['project_title', 'synopsis', 'phase1', 'phase2', 'fianle']

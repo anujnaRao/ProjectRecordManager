@@ -10,8 +10,8 @@ class Homepage(TemplateView):
     template_name = 'index.html'
 
 
-class Dashboard(TemplateView):
-    template_name = 'student_dashboard.html'
+# class Dashboard(TemplateView):
+#     template_name = 'student_dashboard.html'
 
 
 class DashboardFaculty(TemplateView):
@@ -27,7 +27,7 @@ def Login(request):
         if user is not None:
             auth.login(request, user)
             if user.is_student:
-                return redirect('studentDashboard')
+                return redirect('projects')
             if user.is_faculty:
                 return redirect('facultyDashboard')
 
@@ -96,8 +96,6 @@ def projectCreation(request):
         formp = ProjectForm(request.POST, request.FILES)
         if formp.is_valid():
             formp.save()
-            print(formp.project_title)
-
             project_title = formp.cleaned_data.get('project_title')
             messages.success(request, f'Account created for {project_title}.')
             return redirect('studentDashboard')

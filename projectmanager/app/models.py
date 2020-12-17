@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from tinymce.models import HTMLField
-from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
+from django.contrib.auth.models import (
+    AbstractBaseUser, BaseUserManager, PermissionsMixin)
 
 
 class UserManager(BaseUserManager):
@@ -138,8 +139,10 @@ class Student(CustomUser):
 
 class Team(models.Model):
     owner = models.CharField(max_length=555, default="Name + USN")
-    partner = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
-    guide = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True, blank=True)
+    partner = models.ForeignKey(
+        Student, on_delete=models.CASCADE, null=True, blank=True)
+    guide = models.ForeignKey(
+        Faculty, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=555, null=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -152,7 +155,8 @@ class Team(models.Model):
 
 
 class Project(models.Model):
-    project_title = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+    project_title = models.ForeignKey(
+        Team, on_delete=models.CASCADE, null=True)
     synopsis = HTMLField()
     phase1 = HTMLField()
     phase2 = HTMLField()
@@ -162,4 +166,4 @@ class Project(models.Model):
         db_table = "project"
 
     def __str__(self):
-        return self.project_title
+        return str(self.project_title)
