@@ -1,10 +1,70 @@
- {% extends 'base.html' %}
- 
- {% block title %} <title>Student Dashboard</title> {% endblock %}
+{#{% extends 'base.html' %}#}
+ {% load static %}
+{% load crispy_forms_tags %}
+
+ {% block title %} <title>Student Dashboard</title> 
+
+ {% endblock %}
+
 
  {% block useCss %} {% endblock %}
 
  {% block content %}
- 
+ <div class="container-fluid mt-3">
+    <div class="row">
+        <div class="col-md-8 text-left">
+            <div class="card">
+                <div class="card-header font-weight-bold " style="background:powderblue; color:black">INSTRUCTIONS</div>
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 offset-md-1">
+            <div class="card">
+                <div class="card-header text-center font-weight-bold"style="background:powderblue; color:black;">QUICK LINKS</div>
+                <div class="card-body">
+                      <ul class="list-unstyled" >
+                        <li><a style="text-decoration: none; color:royalblue;">
+                           <em class="fas fa-user-circle"></em> Profile</a></li>
+                        <li><a style="text-decoration: none; color:royalblue;">
+                            <em class="fas fa-home"></em> Home</a></li>
+                        <li><a style="text-decoration: none; color:royalblue;">
+                            <em class="fas fa-columns"></em> Dashboard</a></li>
+                        <li><a style="text-decoration: none; color:royalblue;">
+                            <em class="fas fa-clipboard-list"></em> Kanban Board</a></li>
+                      </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container p-1">
+    <div class="card mt-2">
+        <div class="card-header font-weight-bold" style="background:powderblue; color:black;">
+            PROJECTS
+        </div>
+        <div class="card-body">
+            <form action="{% url 'projects' %}" method="POST">
+                {% csrf_token %}
+
+                {{ formp.project_title|as_crispy_field }}
+
+{#                <div class="form-row">#}
+{#                    <div class="form-group col-md-4 mb-0 offset-1">#}
+{#                        <button type="submit" class="btn btn-block font-weight-bold"#}
+{#                            style="background: royalblue;color: black; ">Create Project#}
+{#                        </button>#}
+{#                    </div>#}
+{#                </div>#}
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+
 
  {% endblock %}

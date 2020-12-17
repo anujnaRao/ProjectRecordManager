@@ -8,7 +8,8 @@ from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, Permi
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password, is_active=True, is_staff=False, is_superuser=False,
-                    is_student=False, is_faculty=False, is_faculty_available=False, is_student_available=False, **extra_fields):
+                    is_student=False, is_faculty=False, is_faculty_available=False, is_student_available=False,
+                    **extra_fields):
         """
         Create and save a User with the given email and password.
         """
@@ -42,8 +43,7 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-
-class CustomUser(AbstractBaseUser,PermissionsMixin):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = None
     first_name = None
     last_name = None
@@ -66,7 +66,7 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
 
     def __str__(self):
         return self.email
-    
+
     @property
     def is_staff(self):
         return self.staff
@@ -82,15 +82,15 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     @property
     def is_student(self):
         return self.isstudent
-    
+
     @property
     def is_faculty(self):
         return self.isfaculty
-    
+
     @property
     def is_faculty_available(self):
         return self.faculty_available
-    
+
     @property
     def is_student_available(self):
         return self.student_available
@@ -119,11 +119,10 @@ class Batch(models.Model):
 
 
 class Student(CustomUser):
-    usn = models.CharField(max_length=15, null=True, unique = True, default='1R')
+    usn = models.CharField(max_length=15, null=True, unique=True, default='1R')
     phone = models.CharField(max_length=11, null=True)
     section = models.CharField(max_length=5, null=True)
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
-    
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['usn', 'phone']
@@ -136,23 +135,24 @@ class Student(CustomUser):
     class Meta:
         db_table = "student"
 
+
 class Team(models.Model):
-    owner = models.CharField(max_length=555, default = "Name + USN" )
+    owner = models.CharField(max_length=555, default="Name + USN")
     partner = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
     guide = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True, blank=True)
-    title =  models.CharField(max_length=555, null = True, unique = True )
+    title = models.CharField(max_length=555, null=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
 
     class Meta:
         db_table = "team"
 
     def __str__(self):
-        return self.title + ' '+ self.owner
+        return self.title + ' ' + self.owner
+
 
 class Project(models.Model):
-    project_title = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
+    project_title = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     synopsis = HTMLField()
     phase1 = HTMLField()
     phase2 = HTMLField()

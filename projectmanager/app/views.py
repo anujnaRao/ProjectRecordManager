@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import HttpResponse
-from .forms import ExtendedFacultyCreationForm, ExtendedStudentCreationForm
+from .forms import ExtendedFacultyCreationForm, ExtendedStudentCreationForm, ProjectForm
 from django.contrib import messages, auth
 from django.shortcuts import render, redirect
 
@@ -12,6 +12,11 @@ class Homepage(TemplateView):
 
 class Dashboard(TemplateView):
     template_name = 'student_dashboard.html'
+
+
+class DashboardFaculty(TemplateView):
+    template_name = 'faculty_dashboard.html'
+
 
 def Login(request):
     if request.method == 'POST':
@@ -25,7 +30,7 @@ def Login(request):
                 return redirect('studentDashboard')
             if user.is_faculty:
                 return redirect('facultyDashboard')
-            
+
         else:
             messages.error(request,
                            'Please enter a correct username and password. Note that both fields may be '
@@ -38,7 +43,6 @@ def Login(request):
 def logout(request):
     auth.logout(request)
     return redirect('index')
-
 
 
 def facultyRegistration(request):
@@ -71,3 +75,32 @@ def studentRegistration(request):
     return render(request, 'student_register.html', {'forms': form})
 
 
+# def teamCreation(request):
+#     if request.method == 'POST':
+#         form = ProjectForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             instance = form.save(commit=False)
+#             instance.owner = request.user
+#             instance.save()
+#
+#             project_title = form.cleaned_data.get('project_title')
+#             messages.success(request, f'Account created for {project_title}.')
+#             return redirect('studentDashboard')
+#     else:
+#         form = ProjectForm()
+#     return render(request, 'student_dashboard.html', {'forms': form})
+
+
+def projectCreation(request):
+    if request.method == 'POST':
+        formp = ProjectForm(request.POST, request.FILES)
+        if formp.is_valid():
+            formp.save()
+            print(formp.project_title)
+
+            project_title = formp.cleaned_data.get('project_title')
+            messages.success(request, f'Account created for {project_title}.')
+            return redirect('studentDashboard')
+    else:
+        formp = ProjectForm()
+    return render(request, 'student_dashboard.html', {'formp': formp})

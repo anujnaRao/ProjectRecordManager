@@ -1,7 +1,8 @@
 from django import forms
 
 from django.contrib.auth.forms import UserCreationForm
-from .models import Faculty,Student,Project,Team
+from .models import Faculty, Student, Project, Team
+
 
 class CheckboxInput(forms.CheckboxInput):
     def __init__(self, default=False, *args, **kwargs):
@@ -12,6 +13,7 @@ class CheckboxInput(forms.CheckboxInput):
         if name not in data:
             return self.default
         return super(CheckboxInput, self).value_from_datadict(data, files, name)
+
 
 class ExtendedFacultyCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Email", max_length=100, widget=forms.EmailInput(attrs={
@@ -42,7 +44,7 @@ class ExtendedFacultyCreationForm(UserCreationForm):
 
     class Meta:
         model = Faculty
-        fields = ['email', 'phone','name','password1','password2','isfaculty']
+        fields = ['email', 'phone', 'name', 'password1', 'password2', 'isfaculty']
 
 
 class ExtendedStudentCreationForm(UserCreationForm):
@@ -78,4 +80,11 @@ class ExtendedStudentCreationForm(UserCreationForm):
 
     class Meta:
         model = Student
-        fields = ['email', 'phone','name','password1','password2','usn','batch','section', 'isstudent']
+        fields = ['email', 'phone', 'name', 'password1', 'password2', 'usn', 'batch', 'section', 'isstudent']
+
+
+class ProjectForm(forms.ModelForm):
+
+    class Meta:
+        model = Project
+        fields = ['project_title']
