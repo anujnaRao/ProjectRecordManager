@@ -1,21 +1,19 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import HttpResponse
-from .forms import ExtendedFacultyCreationForm, ExtendedStudentCreationForm, ProjectForm
+from .forms import ExtendedFacultyCreationForm, ExtendedStudentCreationForm, ProjectSynopsisForm, ProjectPhase1Form, \
+    ProjectPhase2Form, ProjectFinaleForm, TeamCreationForm
 from django.contrib import messages, auth
 from django.shortcuts import render, redirect
+from .models import Student, Team
 
 
 class Homepage(TemplateView):
     template_name = 'index.html'
 
 
-# class Dashboard(TemplateView):
-#     template_name = 'student_dashboard.html'
-
-
-class DashboardFaculty(TemplateView):
-    template_name = 'faculty_dashboard.html'
+class StudentDashboard(TemplateView):
+    template_name = 'student_dashboard.html'
 
 
 def Login(request):
@@ -27,7 +25,14 @@ def Login(request):
         if user is not None:
             auth.login(request, user)
             if user.is_student:
-                return redirect('projects')
+                # queryset = Student.objects.filter(email=email)
+                # # print(queryset)
+                # # studentDict = {"usn":""}
+                # for data in queryset.iterator():
+                #     print(data.usn)
+                #     print(data.name)
+                #     studentDict["usn"] = data.usn
+                return redirect('studentDashboard')
             if user.is_faculty:
                 return redirect('facultyDashboard')
 
@@ -75,30 +80,97 @@ def studentRegistration(request):
     return render(request, 'student_register.html', {'forms': form})
 
 
-# def teamCreation(request):
-#     if request.method == 'POST':
-#         form = ProjectForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             instance = form.save(commit=False)
-#             instance.owner = request.user
-#             instance.save()
-#
-#             project_title = form.cleaned_data.get('project_title')
-#             messages.success(request, f'Account created for {project_title}.')
-#             return redirect('studentDashboard')
-#     else:
-#         form = ProjectForm()
-#     return render(request, 'student_dashboard.html', {'forms': form})
-
-
-def projectCreation(request):
+def teamCreation(request):
     if request.method == 'POST':
-        formp = ProjectForm(request.POST, request.FILES)
-        if formp.is_valid():
-            formp.save()
-            project_title = formp.cleaned_data.get('project_title')
-            messages.success(request, f'Account created for {project_title}.')
-            return redirect('studentDashboard')
+        formt = TeamCreationForm(request.POST, request.FILES)
+        if formt.is_valid():
+            owner = formt.cleaned_data.get('owner')
+            partner = formt.cleaned_data.get('partner')
+            guide = formt.cleaned_data.get('guide')
+            # print(owner)
+            queryset1 = Team.objects.filter(owner=partner)
+            queryset3 = Team.objects.filter(partner=owner)
+            # for data in queryset1:
+                # print(data.owner)
+            # print(queryset1)
+            queryset2 = Team.objects.filter(guide=guide)
+            count = 0
+            facultyCountExceed = False
+            for data in queryset2:
+                if data:
+                    count = count + 1
+                if count >= 6:
+                    facultyCountExceed = True
+            if str(owner) == str(partner):
+                messages.error(request, f'First and Second student cannot be same')
+                return redirect('teams')
+            if queryset1 or queryset3:
+                messages.error(request, f'Team member already chosen')
+                return redirect('teams')
+            if facultyCountExceed:
+                messages.error(request, f'Faculty {guide} is already having 6 teams')
+                return redirect('teams')
+            else:
+                formt.save()
+                project_title = formt.cleaned_data.get('title')
+
+                messages.success(request, f'Team created with {partner} with Title: {project_title}.')
+                return redirect('teams')
+        else:
+            messages.error(request, f'Team member already chosen ')
+            return redirect('teams')
     else:
-        formp = ProjectForm()
-    return render(request, 'student_dashboard.html', {'formp': formp})
+        formt = TeamCreationForm()
+    return render(request, 'team_create.html', {'formt': formt})
+
+
+def projectSynopsisCreation(request):
+    if request.method == 'POST':
+        formy = ProjectSynopsisForm(request.POST, request.FILES)
+        if formy.is_valid():
+            formy.save()
+            project_title = formy.clened_data.get('project_title')
+            messages.success(request, f'Account created for {project_title}.')
+            return redirect('projectsynopsis')
+    else:
+        formy = ProjectSynopsisForm()
+    return render(request, 'project/project_synopsis.html', {'formy': formy})
+
+
+def projectPhase1Creation(request):
+    if request.method == 'POST':
+        form1 = ProjectPhase1Form(request.POST, request.FILES)
+        if form1.is_valid():
+            form1.save()
+            project_title = form1.cleaned_data.get('project_title')
+            messages.success(request, f'Account created for {project_title}.')
+            return redirect('projectphase1')
+    else:
+        form1 = ProjectPhase1Form()
+    return render(request, 'project/project_phase1.html', {'form1': form1})
+
+
+def projectPhase2Creation(request):
+    if request.method == 'POST':
+        form2 = ProjectPhase2Form(request.POST, request.FILES)
+        if form2.is_valid():
+            form2.save()
+            project_title = form2.cleaned_data.get('project_title')
+            messages.success(request, f'Account created for {project_title}.')
+            return redirect('projectphase2')
+    else:
+        form2 = ProjectPhase2Form()
+    return render(request, 'project/project_phase2.html', {'form2': form2})
+
+
+def projectFinaleCreation(request):
+    if request.method == 'POST':
+        formf = ProjectFinaleForm(request.POST, request.FILES)
+        if formf.is_valid():
+            formf.save()
+            project_title = formf.cleaned_data.get('project_title')
+            messages.success(request, f'Account created for {project_title}.')
+            return redirect('projectfinale')
+    else:
+        formf = ProjectFinaleForm()
+    return render(request, 'project/project_finale.html', {'formf': formf})

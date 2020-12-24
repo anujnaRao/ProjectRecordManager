@@ -1,7 +1,7 @@
 from django import forms
 
 from django.contrib.auth.forms import UserCreationForm
-from .models import Faculty, Student, Project, Team
+from .models import Faculty, Student, ProjectSynopsis, ProjectPhase1, ProjectPhase2, ProjectFinale, Team
 from tinymce.widgets import TinyMCE
 
 
@@ -88,20 +88,57 @@ class ExtendedStudentCreationForm(UserCreationForm):
                   'password2', 'usn', 'batch', 'section', 'isstudent']
 
 
-class ProjectForm(forms.ModelForm):
+class ProjectSynopsisForm(forms.ModelForm):
     synopsis = forms.CharField(
         label="Synopsis", widget=TinyMCE(attrs={'cols': 50, 'rows': 10, "class": "form-control",
                                                 "placeholder": "Synopsis details"}))
+
+    class Meta:
+        model = ProjectSynopsis
+        fields = ['project_title', 'synopsis']
+
+
+class ProjectPhase1Form(forms.ModelForm):
     phase1 = forms.CharField(
         label="Phase 1", widget=TinyMCE(attrs={'cols': 50, 'rows': 10, "class": "form-control",
                                                "placeholder": "Phase 1 details"}))
+
+    class Meta:
+        model = ProjectPhase1
+        fields = ['project_title', 'phase1']
+
+
+class ProjectPhase2Form(forms.ModelForm):
     phase2 = forms.CharField(
         label="Phase 2", widget=TinyMCE(attrs={'cols': 50, 'rows': 10, "class": "form-control",
                                                "placeholder": "Phase 2 details"}))
-    fianle = forms.CharField(
+
+    class Meta:
+        model = ProjectPhase2
+        fields = ['project_title', 'phase2']
+
+
+class ProjectFinaleForm(forms.ModelForm):
+    finale = forms.CharField(
         label="Final Phase", widget=TinyMCE(attrs={'cols': 50, 'rows': 10, "class": "form-control",
                                                    "placeholder": "Enter Final phase details"}))
 
     class Meta:
-        model = Project
-        fields = ['project_title', 'synopsis', 'phase1', 'phase2', 'fianle']
+        model = ProjectFinale
+        fields = ['project_title', 'finale']
+
+
+class TeamCreationForm(forms.ModelForm):
+    owner = forms.CharField(label="First Student", max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'First Student'
+    }))
+
+    title = forms.CharField(label="Project Title", max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Project Title'
+    }))
+
+    class Meta:
+        model = Team
+        fields = ['title', 'owner', 'partner', 'guide']

@@ -131,16 +131,16 @@ class Student(CustomUser):
     objects = UserManager()
 
     def __str__(self):
-        return self.name + ' ' + self.usn
+        return self.name + ' ' + self.email
 
     class Meta:
         db_table = "student"
 
 
 class Team(models.Model):
-    owner = models.CharField(max_length=555, default="Name + USN")
-    partner = models.ForeignKey(
-        Student, on_delete=models.CASCADE, null=True, blank=True)
+    owner = models.CharField(max_length=555, unique=True)
+    partner = models.OneToOneField(
+        Student, on_delete=models.CASCADE, null=True, blank=True, unique= True)
     guide = models.ForeignKey(
         Faculty, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=555, null=True, unique=True)
@@ -151,19 +151,48 @@ class Team(models.Model):
         db_table = "team"
 
     def __str__(self):
-        return self.title + ' ' + self.owner
+        return str(self.owner)
 
 
-class Project(models.Model):
+class ProjectSynopsis(models.Model):
     project_title = models.ForeignKey(
         Team, on_delete=models.CASCADE, null=True)
     synopsis = HTMLField()
-    phase1 = HTMLField()
-    phase2 = HTMLField()
-    fianle = HTMLField()
-
-    class Meta:
-        db_table = "project"
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.project_title)
+        return str(self.project_title) + "synopsis"
+
+
+class ProjectPhase1(models.Model):
+    project_title = models.ForeignKey(
+        Team, on_delete=models.CASCADE, null=True)
+    phase1 = HTMLField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.project_title) + "phase1"
+
+
+class ProjectPhase2(models.Model):
+    project_title = models.ForeignKey(
+        Team, on_delete=models.CASCADE, null=True)
+    phase2 = HTMLField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.project_title) + "phase2"
+
+
+class ProjectFinale(models.Model):
+    project_title = models.ForeignKey(
+        Team, on_delete=models.CASCADE, null=True)
+    finale = HTMLField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.project_title) + "finale"
