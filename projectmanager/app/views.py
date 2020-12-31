@@ -16,6 +16,10 @@ class StudentDashboard(TemplateView):
     template_name = 'student_dashboard.html'
 
 
+class FacultyDashboard(TemplateView):
+    template_name = 'faculty_dashboard.html'
+
+
 def Login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -87,12 +91,15 @@ def teamCreation(request):
             owner = formt.cleaned_data.get('owner')
             partner = formt.cleaned_data.get('partner')
             guide = formt.cleaned_data.get('guide')
-            # print(owner)
+            print(owner)
+            print(partner)
             queryset1 = Team.objects.filter(owner=partner)
-            queryset3 = Team.objects.filter(partner=owner)
-            # for data in queryset1:
-                # print(data.owner)
+            # queryset3 = Team.objects.filter(partner=owner)
             # print(queryset1)
+            # print(queryset3)
+            # for data in queryset3:
+            #     print(data.partner)
+            #     print(queryset3)
             queryset2 = Team.objects.filter(guide=guide)
             count = 0
             facultyCountExceed = False
@@ -104,9 +111,12 @@ def teamCreation(request):
             if str(owner) == str(partner):
                 messages.error(request, f'First and Second student cannot be same')
                 return redirect('teams')
-            if queryset1 or queryset3:
+            if queryset1:
                 messages.error(request, f'Team member already chosen')
                 return redirect('teams')
+            # if queryset3:
+            #     messages.error(request, f'Team member already chosen')
+            #     return redirect('teams')
             if facultyCountExceed:
                 messages.error(request, f'Faculty {guide} is already having 6 teams')
                 return redirect('teams')
@@ -129,7 +139,7 @@ def projectSynopsisCreation(request):
         formy = ProjectSynopsisForm(request.POST, request.FILES)
         if formy.is_valid():
             formy.save()
-            project_title = formy.clened_data.get('project_title')
+            project_title = formy.cleaned_data.get('project_title')
             messages.success(request, f'Account created for {project_title}.')
             return redirect('projectsynopsis')
     else:

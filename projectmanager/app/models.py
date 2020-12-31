@@ -140,7 +140,7 @@ class Student(CustomUser):
 class Team(models.Model):
     owner = models.CharField(max_length=555, unique=True)
     partner = models.OneToOneField(
-        Student, on_delete=models.CASCADE, null=True, blank=True, unique= True)
+        Student, on_delete=models.CASCADE, null=True, blank=True, unique=True)
     guide = models.ForeignKey(
         Faculty, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=555, null=True, unique=True)
@@ -151,10 +151,12 @@ class Team(models.Model):
         db_table = "team"
 
     def __str__(self):
-        return str(self.owner)
+        return str(self.title) + ", Student1:  " + str(self.owner) + ", student2:  " + str(
+            self.partner) + ", Guide:  " + str(self.guide)
 
 
 class ProjectSynopsis(models.Model):
+    scrum_master = models.CharField(max_length=100, default="scrum master")
     project_title = models.ForeignKey(
         Team, on_delete=models.CASCADE, null=True)
     synopsis = HTMLField()

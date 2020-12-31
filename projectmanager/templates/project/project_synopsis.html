@@ -12,37 +12,51 @@
 
 {% block content %}
 
-<div class="container p-1">
-    <div class="card mt-2">
-        <div class="card-header font-weight-bold" style="background:powderblue; color:black;">
-            PROJECT SYNOPSIS
-        </div>
-        <div class="card-body">
+    <div class="container p-1">
+        <div class="card mt-2">
+            <div class="card-header font-weight-bold" style="background:powderblue; color:black;">
+                PROJECT SYNOPSIS
+            </div>
+            <div class="card-body">
 
-            <form action="{% url 'projectsynopsis' %}" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-row">
-                    <div class="form-group col-md-12 mb-0">
-                        {{ formy.project_title|as_crispy_field }}
+                <form action="{% url 'projectsynopsis' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-12 mb-0">
+                                <div id="div_id_scrum_master" class="form-group">
+                                    <label for="id_scrum_master" class=" requiredField">
+                                        Scrum master<span class="asteriskField">*</span>
+                                    </label>
+                                    <div class="">
+                                        <input type="text" name="scrum_master" value="{{ user.name }}" maxlength="100"
+                                               class="textinput textInput form-control"
+                                               id="id_scrum_master" readonly>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-12 mb-0">
-                        {{ formy.synopsis|as_crispy_field }}
+                    <div class="form-row">
+                        <div class="form-group col-md-12 mb-0">
+                            {{ formy.project_title|as_crispy_field }}
+                        </div>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-8 mb-0 offset-1">
-                        <button type="submit" class="btn btn-block font-weight-bold"
-                            style="background: royalblue;color: black; ">Submit Details
-                        </button>
+                    <div class="form-row">
+                        <div class="form-group col-md-12 mb-0">
+                            {{ formy.synopsis|as_crispy_field }}
+                        </div>
                     </div>
-                </div>
-            </form>
+                    <div class="form-row">
+                        <div class="form-group col-md-8 mb-0 offset-1">
+                            <button type="submit" class="btn btn-block font-weight-bold"
+                                    style="background: royalblue;color: black; ">Submit Details
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
+
+
     </div>
-
-
-</div>
 
 {% endblock %}

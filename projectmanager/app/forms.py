@@ -95,7 +95,7 @@ class ProjectSynopsisForm(forms.ModelForm):
 
     class Meta:
         model = ProjectSynopsis
-        fields = ['project_title', 'synopsis']
+        fields = ['scrum_master', 'project_title', 'synopsis']
 
 
 class ProjectPhase1Form(forms.ModelForm):
@@ -129,10 +129,6 @@ class ProjectFinaleForm(forms.ModelForm):
 
 
 class TeamCreationForm(forms.ModelForm):
-    owner = forms.CharField(label="First Student", max_length=100, required=True, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'First Student'
-    }))
 
     title = forms.CharField(label="Project Title", max_length=100, required=True, widget=forms.TextInput(attrs={
         'class': 'form-control',
