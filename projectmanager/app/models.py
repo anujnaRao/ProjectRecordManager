@@ -168,6 +168,7 @@ class ProjectSynopsis(models.Model):
 
 
 class ProjectPhase1(models.Model):
+    scrum_master = models.CharField(max_length=100, default="scrum master")
     project_title = models.ForeignKey(
         Team, on_delete=models.CASCADE, null=True)
     phase1 = HTMLField()
@@ -179,6 +180,7 @@ class ProjectPhase1(models.Model):
 
 
 class ProjectPhase2(models.Model):
+    scrum_master = models.CharField(max_length=100, default="scrum master")
     project_title = models.ForeignKey(
         Team, on_delete=models.CASCADE, null=True)
     phase2 = HTMLField()
@@ -190,6 +192,7 @@ class ProjectPhase2(models.Model):
 
 
 class ProjectFinale(models.Model):
+    scrum_master = models.CharField(max_length=100, default="scrum master")
     project_title = models.ForeignKey(
         Team, on_delete=models.CASCADE, null=True)
     finale = HTMLField()

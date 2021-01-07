@@ -95,7 +95,7 @@ class ProjectSynopsisForm(forms.ModelForm):
 
     class Meta:
         model = ProjectSynopsis
-        fields = ['scrum_master', 'project_title', 'synopsis']
+        fields = ['id', 'scrum_master', 'project_title', 'synopsis']
 
 
 class ProjectPhase1Form(forms.ModelForm):
@@ -105,7 +105,7 @@ class ProjectPhase1Form(forms.ModelForm):
 
     class Meta:
         model = ProjectPhase1
-        fields = ['project_title', 'phase1']
+        fields = ['id', 'scrum_master', 'project_title', 'phase1']
 
 
 class ProjectPhase2Form(forms.ModelForm):
@@ -115,7 +115,7 @@ class ProjectPhase2Form(forms.ModelForm):
 
     class Meta:
         model = ProjectPhase2
-        fields = ['project_title', 'phase2']
+        fields = ['id', 'scrum_master', 'project_title', 'phase2']
 
 
 class ProjectFinaleForm(forms.ModelForm):
@@ -125,7 +125,7 @@ class ProjectFinaleForm(forms.ModelForm):
 
     class Meta:
         model = ProjectFinale
-        fields = ['project_title', 'finale']
+        fields = ['id', 'scrum_master', 'project_title', 'finale']
 
 
 class TeamCreationForm(forms.ModelForm):

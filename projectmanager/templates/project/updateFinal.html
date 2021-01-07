@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block title %} <title>Final Phase</title>
+{{ form.media }}
+<script type="text/javascript" src="{% static 'tinymce/tinymce.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
+{% endblock %}
+
+
+{% block useCss %} {% endblock %}
+
+{% block content %}
+
+    <div class="container p-1">
+        <div class="card mt-2">
+            <div class="card-header font-weight-bold" style="background:powderblue; color:black;">
+                PROJECT FINAL PHASE
+            </div>
+            <div class="card-body">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form-row">
+                        <div class="form-group col-md-12 mb-0">
+                            {{ form.finale|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-8 mb-0 offset-1">
+                            <button type="submit" class="btn btn-block font-weight-bold"
+                                    style="background: royalblue;color: black; ">Update Details
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}

@@ -16,5 +16,9 @@ urlpatterns = [
     path('projectphase2/', views.projectPhase2Creation, name="projectphase2"),
     path('projectfianle/', views.projectFinaleCreation, name="projectfinale"),
     path('teams/', views.teamCreation, name="teams"),
+    path('projectsynopsis/synopsisUpdate/<int:pk>', views.SynopsisUpdateView.as_view(), name="updateSynopsis"),
+    path('projectphase1/phase1Update/<int:pk>', views.Phase1UpdateView.as_view(), name="updatePhase1"),
+    path('projectphase2/phase2Update/<int:pk>', views.Phase2UpdateView.as_view(), name="updatePhase2"),
+    path('projectfinale/finaleUpdate/<int:pk>', views.FinalUpdateView.as_view(), name="updateFinale"),
     path('logout/', views.logout, name="logout"),
 ]

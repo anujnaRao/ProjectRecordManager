@@ -4,7 +4,9 @@
 
 
 {% block title %} <title>Synopsis</title>
-
+    {{ form.media }}
+    <script type="text/javascript" src="{% static 'tinymce/tinymce.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
 {% endblock %}
 
 
@@ -18,11 +20,11 @@
                 PROJECT SYNOPSIS
             </div>
             <div class="card-body">
-
-                <form action="{% url 'projectsynopsis' %}" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-row">
-                        <div class="form-group col-md-12 mb-0">
+                {% if needToUpdate == False and needToUpdateidt == False %}
+                    <form action="{% url 'projectsynopsis' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group col-md-12 mb-0">
                                 <div id="div_id_scrum_master" class="form-group">
                                     <label for="id_scrum_master" class=" requiredField">
                                         Scrum master<span class="asteriskField">*</span>
@@ -34,25 +36,38 @@
                                     </div>
                                 </div>
                             </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-12 mb-0">
-                            {{ formy.project_title|as_crispy_field }}
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-12 mb-0">
-                            {{ formy.synopsis|as_crispy_field }}
+                        <div class="form-row">
+                            <div class="form-group col-md-12 mb-0">
+                                {{ formy.project_title|as_crispy_field }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-8 mb-0 offset-1">
-                            <button type="submit" class="btn btn-block font-weight-bold"
-                                    style="background: royalblue;color: black; ">Submit Details
-                            </button>
+                        <div class="form-row">
+                            <div class="form-group col-md-12 mb-0">
+                                {{ formy.synopsis|as_crispy_field }}
+                            </div>
                         </div>
-                    </div>
-                </form>
+                        <div class="form-row">
+                            <div class="form-group col-md-8 mb-0 offset-1">
+                                <button type="submit" class="btn btn-block font-weight-bold"
+                                        style="background: royalblue;color: black; ">Submit Details
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                {% else %}
+                    {% for data in idt %}
+                        {{ data.synopsis }}
+
+                        <a href="{% url 'updateSynopsis' data.id %}" class="btn btn-block font-weight-bold"
+                           style="background: royalblue;color: black; ">Update Details
+                        </a>
+                        <div class="container text-right m-2 p-2">
+                            <span class="badge badge-info badge-pill p-2 font-weight-bolder" style="color: black;">Project Created at: {{ data.created_at }}</span>
+                            <span class="badge badge-info badge-pill p-2 font-weight-bolder" style="color: black;">Project Updated at: {{ data.updated_at }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
 
