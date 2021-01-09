@@ -16,8 +16,24 @@ class StudentDashboard(TemplateView):
     template_name = 'student_dashboard.html'
 
 
-class FacultyDashboard(TemplateView):
-    template_name = 'faculty_dashboard.html'
+def facultyDashboard(request):
+    queryset1 = Team.objects.filter(guide=request.user.id)
+    Doclst = []
+    print(queryset1)
+    teamId = ""
+    for data in queryset1:
+        teamId = int(data.id)
+        print(teamId)
+        queryset2 = ProjectSynopsis.objects.filter(project_title=teamId)
+
+        for dt in queryset2:
+            Doclst.append(dt.id)
+            print(dt.id)
+            print(dt.scrum_master)
+
+    print(Doclst)
+
+    return render(request, 'faculty_dashboard.html', {'team': queryset1, "docx": Doclst})
 
 
 def Login(request):
