@@ -20,6 +20,16 @@
                 PROJECT SYNOPSIS
             </div>
             <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
                 {% if needToUpdate == False and needToUpdateidt == False %}
                     <form action="{% url 'projectsynopsis' %}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -63,8 +73,8 @@
                            style="background: royalblue;color: black; ">Update Details
                         </a>
                         <div class="container text-right m-2 p-2">
-                            <span class="badge badge-info badge-pill p-2 font-weight-bolder" style="color: black;">Project Created at: {{ data.created_at }}</span>
-                            <span class="badge badge-info badge-pill p-2 font-weight-bolder" style="color: black;">Project Updated at: {{ data.updated_at }}</span>
+                            <span class="badge badge-info badge-pill p-2 font-weight-bolder" style="background:powderblue; color:black;">Project Created at: {{ data.created_at }}</span>
+                            <span class="badge badge-info badge-pill p-2 font-weight-bolder" style="background:powderblue; color:black;">Project Updated at: {{ data.updated_at }}</span>
                         </div>
                     {% endfor %}
                 {% endif %}

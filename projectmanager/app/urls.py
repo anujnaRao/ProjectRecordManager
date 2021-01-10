@@ -9,7 +9,7 @@ urlpatterns = [
          name="facultyRegistration"),
     path('studentRegister/', views.studentRegistration,
          name="studentRegistration"),
-    path('studentdash/', views.StudentDashboard.as_view(), name="studentDashboard"),
+    path('studentdash/', views.StudentDashboard, name="studentDashboard"),
     path('facultydash/', views.facultyDashboard, name="facultyDashboard"),
     path('projectsynopsis/', views.projectSynopsisCreation, name="projectsynopsis"),
     path('projectphase1/', views.projectPhase1Creation, name="projectphase1"),
@@ -20,5 +20,6 @@ urlpatterns = [
     path('projectphase1/phase1Update/<int:pk>', views.Phase1UpdateView.as_view(), name="updatePhase1"),
     path('projectphase2/phase2Update/<int:pk>', views.Phase2UpdateView.as_view(), name="updatePhase2"),
     path('projectfinale/finaleUpdate/<int:pk>', views.FinalUpdateView.as_view(), name="updateFinale"),
+    path('facultyCommentSynopsis/<int:teamId>', views.facultyCommentSynopsis, name="facultyCommentSynopsis"),
     path('logout/', views.logout, name="logout"),
 ]

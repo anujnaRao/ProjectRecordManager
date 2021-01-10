@@ -201,3 +201,15 @@ class ProjectFinale(models.Model):
 
     def __str__(self):
         return str(self.project_title) + "finale"
+
+
+class Logs(models.Model):
+    logs_by = models.CharField(max_length=100, default="logs")
+    tid = models.ForeignKey(
+        Team, on_delete=models.CASCADE, null=True)
+    description = models.CharField(max_length=500, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.logs_by)

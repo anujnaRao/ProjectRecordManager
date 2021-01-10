@@ -4,96 +4,98 @@
 
 
 {% block title %} <title>Student Dashboard</title>
-{{ form.media }}
-<script type="text/javascript" src="{% static 'tinymce/tinymce.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
+    {{ form.media }}
+    <script type="text/javascript" src="{% static 'tinymce/tinymce.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
 {% endblock %}
 
 
 {% block useCss %} {% endblock %}
 
 {% block content %}
-<div class="container-fluid mt-3">
-    <div class="row">
-        <div class="col-md-8 text-left">
-            <div class="card">
-                <div class="card-header font-weight-bold " style="background:powderblue; color:black">NOTIFICATION : </div>
-                <div class="card-body">
-                    <a href="{% url 'teams' %}" class="btn btn-danger btn-md" style="text-decoration: none;">Create Team</a>
+    <div class="container-fluid mt-3">
+        <div class="row mb-3">
+
+            <div class="col-md-8 text-left">
+                <div class="card">
+                    <div class="card-header font-weight-bold " style="background:powderblue; color:black">Create Log :
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="">
+                            {% csrf_token %}
+
+                            <div id="div_id_logs_by" class="form-group">
+                                <label for="id_logs_by" class=" requiredField">
+                                    Logs by<span class="asteriskField">*</span>
+                                </label>
+                                <div class="">
+                                    <input type="text" name="logs_by" value="{{ request.user.name }}" maxlength="100"
+                                           class="textinput textInput form-control" id="id_logs_by" readonly>
+                                </div>
+                            </div>
+
+
+{#                            {{ forml.logs_by| as_crispy_field }}#}
+                            {{ forml.tid| as_crispy_field }}
+                            {{ forml.description| as_crispy_field }}
+                            <button type="submit" class="btn btn-info"> Create</button>
+                        </form>
+                    </div>
+                </div>
+                <hr>
+                <div class="card">
+                    <div class="card-header font-weight-bold " style="background:powderblue; color:black">LOGS :</div>
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            <thead>
+                            <tr>
+                                <th>Created By</th>
+                                <th>Description</th>
+                                <th>Updated At</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in idt %}
+                                <tr>
+                                <td>{{ data.logs_by }}</td>
+                                <td>{{ data.description }}</td>
+                                <td>{{ data.updated_at }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3 offset-md-1">
-            <div class="card">
-                <div class="card-header text-center font-weight-bold" style="background:powderblue; color:black;">QUICK
-                    LINKS</div>
-                <div class="card-body">
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'index' %}" style="text-decoration: none; color:royalblue;">
+
+            <div class="col-md-3 mx-auto ">
+                <div class="card">
+                    <div class="card-header text-center font-weight-bold" style="background:powderblue; color:black;">
+                        QUICK
+                        LINKS
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><a href="{% url 'teams' %}" class="btn btn-danger btn-md"
+                                   style="text-decoration: none;">Create
+                                Team</a></li>
+                            <li><a href="{% url 'index' %}" style="text-decoration: none; color:royalblue;">
                                 <em class="fas fa-home"></em> Home</a></li>
-                        <li><a href="#" style="text-decoration: none; color:royalblue;">
+                            <li><a href="#" style="text-decoration: none; color:royalblue;">
                                 <em class="fas fa-clipboard-list"></em> Kanban Board</a></li>
-                        <li><a href="{% url 'projectsynopsis' %}" style="text-decoration: none; color:royalblue;">
+                            <li><a href="{% url 'projectsynopsis' %}" style="text-decoration: none; color:royalblue;">
                                 <em class="fas fa-file"></em> Synopsis</a></li>
-                        <li><a href="{% url 'projectphase1' %}" style="text-decoration: none; color:royalblue;">
+                            <li><a href="{% url 'projectphase1' %}" style="text-decoration: none; color:royalblue;">
                                 <em class="fas fa-file"></em> Phase - I</a></li>
-                        <li><a href="{% url 'projectphase2' %}" style="text-decoration: none; color:royalblue;">
+                            <li><a href="{% url 'projectphase2' %}" style="text-decoration: none; color:royalblue;">
                                 <em class="fas fa-file"></em> Phase - II</a></li>
-                        <li><a href="{% url 'projectfinale' %}" style="text-decoration: none; color:royalblue;">
+                            <li><a href="{% url 'projectfinale' %}" style="text-decoration: none; color:royalblue;">
                                 <em class="fas fa-file"></em> Final Phase</a></li>
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="container p-1">
-    <div class="card mt-2">
-        <div class="card-header font-weight-bold" style="background:powderblue; color:black;">
-            LOGS
-        </div>
-        <div class="card-body">
-
-{#            <form action="{% url 'projects' %}" method="POST" enctype="multipart/form-data">#}
-{#                {% csrf_token %}#}
-{#                <div class="form-row">#}
-{#                    <div class="form-group col-md-12 mb-0">#}
-{#                        {{ formp.project_title|as_crispy_field }}#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="form-row">#}
-{#                    <div class="form-group col-md-12 mb-0">#}
-{#                        {{ formp.synopsis|as_crispy_field }}#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="form-row">#}
-{#                    <div class="form-group col-md-12 mb-0">#}
-{#                        {{ formp.phase1|as_crispy_field }}#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="form-row">#}
-{#                    <div class="form-group col-md-12 mb-0">#}
-{#                        {{ formp.phase2|as_crispy_field }}#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="form-row">#}
-{#                    <div class="form-group col-md-12 mb-0">#}
-{#                        {{ formp.fianle|as_crispy_field }}#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="form-row">#}
-{#                    <div class="form-group col-md-8 mb-0 offset-1">#}
-{#                        <button type="submit" class="btn btn-block font-weight-bold"#}
-{#                            style="background: royalblue;color: black; ">Submit Details#}
-{#                        </button>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </form>#}
-        </div>
-    </div>
-
-
-</div>
 
 {% endblock %}

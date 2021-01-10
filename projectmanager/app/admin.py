@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import CustomUser, Faculty, Student, Team, ProjectSynopsis, ProjectPhase1, ProjectPhase2, ProjectFinale, \
-    Batch
+    Batch, Logs
 
 
 class ConstantValue(admin.ModelAdmin):
@@ -16,3 +16,4 @@ admin.site.register(ProjectPhase1, ConstantValue)
 admin.site.register(ProjectPhase2, ConstantValue)
 admin.site.register(ProjectFinale, ConstantValue)
 admin.site.register(Batch)
+admin.site.register(Logs, ConstantValue)

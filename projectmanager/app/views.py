@@ -1,19 +1,44 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, UpdateView
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .forms import ExtendedFacultyCreationForm, ExtendedStudentCreationForm, ProjectSynopsisForm, ProjectPhase1Form, \
-    ProjectPhase2Form, ProjectFinaleForm, TeamCreationForm
+    ProjectPhase2Form, ProjectFinaleForm, TeamCreationForm, LogCreationForm
 from django.contrib import messages, auth
 from django.shortcuts import render, redirect
-from .models import Student, Team, ProjectSynopsis, ProjectPhase1, ProjectPhase2, ProjectFinale
+from .models import Student, Team, ProjectSynopsis, ProjectPhase1, ProjectPhase2, ProjectFinale, Logs
 
 
 class Homepage(TemplateView):
     template_name = 'index.html'
 
 
-class StudentDashboard(TemplateView):
-    template_name = 'student_dashboard.html'
+def StudentDashboard(request):
+    queryset2 = Team.objects.filter(owner=(request.user.name + " " + request.user.email))
+    queryset3 = Team.objects.filter(partner=request.user.id)
+    idTitle = ""
+    if queryset2:
+        for data in queryset3 or queryset2:
+            idTitle = int(data.id)
+    if queryset3:
+        for data in queryset3 or queryset2:
+            idTitle = int(data.id)
+
+    idt = Logs.objects.filter(tid=idTitle)
+    print("==> idt ", idt)
+    print("Q2",queryset2)
+    print("Q3", queryset3)
+    # qs1 =
+    if request.method == 'POST':
+        form = LogCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            ven = form.cleaned_data.get('logs_by')
+            print(ven)
+            messages.success(request, f'Log created for {ven}.')
+            return redirect('studentDashboard')
+    else:
+        form = LogCreationForm()
+    return render(request, 'student_dashboard.html', {'forml': form, 'idt':idt})
 
 
 def facultyDashboard(request):
@@ -34,6 +59,24 @@ def facultyDashboard(request):
     print(Doclst)
 
     return render(request, 'faculty_dashboard.html', {'team': queryset1, "docx": Doclst})
+
+
+def facultyCommentSynopsis(request, teamId):
+    print("TeamId:", teamId)
+    queryset = ProjectSynopsis.objects.filter(project_title=int(teamId))
+    print(queryset)
+    context = {}
+    obj = get_object_or_404(ProjectSynopsis, project_title=int(teamId))
+    form = ProjectSynopsisForm(request.POST or None, instance=obj)
+
+    # save the data from the form and
+    # redirect to detail_view
+    if form.is_valid():
+        form.save()
+        return redirect("facultyDashboard")
+
+        # add form dictionary to context
+    return render(request, 'project/commentSynopsis.html', {'formc':form,'qs':queryset})
 
 
 def Login(request):
@@ -110,12 +153,13 @@ def teamCreation(request):
             print(owner)
             print(partner)
             queryset1 = Team.objects.filter(owner=partner)
-            # queryset3 = Team.objects.filter(partner=owner)
+            queryset3 = Team.objects.filter(partner=request.user.id)
             # print(queryset1)
-            # print(queryset3)
-            # for data in queryset3:
-            #     print(data.partner)
-            #     print(queryset3)
+            print(queryset3)
+            for data in queryset3:
+                print(data.partner)
+                print(queryset3)
+            # TODO:
             queryset2 = Team.objects.filter(guide=guide)
             count = 0
             facultyCountExceed = False
@@ -130,9 +174,9 @@ def teamCreation(request):
             if queryset1:
                 messages.error(request, f'Team member already chosen')
                 return redirect('teams')
-            # if queryset3:
-            #     messages.error(request, f'Team member already chosen')
-            #     return redirect('teams')
+            if queryset3:
+                messages.error(request, f'Team member already chosen')
+                return redirect('teams')
             if facultyCountExceed:
                 messages.error(request, f'Faculty {guide} is already having 6 teams')
                 return redirect('teams')
@@ -194,7 +238,7 @@ def projectSynopsisCreation(request):
         if formy.is_valid():
             formy.save()
             project_title = formy.cleaned_data.get('project_title')
-            messages.success(request, f'Account created for {project_title}.')
+            messages.success(request, f'Synopsis created for {project_title}.')
             return redirect('projectsynopsis')
     else:
         formy = ProjectSynopsisForm()
@@ -213,31 +257,62 @@ class SynopsisUpdateView(UpdateView):
     def form_valid(self, form):
         form.save()
         messages.success(
-            self.request, 'Your contact has been successfully created!')
+            self.request, 'Synopsis content has been successfully created!')
         return redirect('projectsynopsis')
 
 
 def projectPhase1Creation(request):
-    queryset = ProjectPhase1.objects.filter(scrum_master=request.user.name)
-    print(queryset)
-    count = 0
     needToUpdate = False
-    for data in queryset:
-        if data:
-            count = count + 1
-        if count == 1:
-            needToUpdate = True
+    needToUpdateidt = False
+
+    queryset2 = Team.objects.filter(owner=(request.user.name + " " + request.user.email))
+    queryset3 = Team.objects.filter(partner=request.user.id)
+    idTitle = ""
+    if queryset2:
+        for data in queryset3 or queryset2:
+            idTitle = int(data.id)
+    if queryset3:
+        for data in queryset3 or queryset2:
+            idTitle = int(data.id)
+
+    queryset = ProjectPhase1.objects.filter(scrum_master=request.user.name)
+    idt = ProjectPhase1.objects.filter(project_title=idTitle)
+    print("==> idt ", idt)
+    # print(queryset)
+    count = 0
+    c1 = 0
+    if queryset:
+        for data in queryset:
+            proj_title = data.project_title
+            print("title from Project Syp when come from user.id", data.project_title)
+            if data:
+                count = count + 1
+            if count == 1:
+                needToUpdate = True
+    if idt:
+        for data in idt:
+            proj_title = data.project_title
+            print("title from Project when title comes from team", data.project_title)
+            if data:
+                c1 = c1 + 1
+            if c1 == 1:
+                needToUpdateidt = True
+    print(count, c1)
+    print(needToUpdate, needToUpdateidt)
+
     if request.method == 'POST':
         form1 = ProjectPhase1Form(request.POST, request.FILES)
         if form1.is_valid():
             form1.save()
             project_title = form1.cleaned_data.get('project_title')
-            messages.success(request, f'Account created for {project_title}.')
+            messages.success(request, f'Phase-I created for {project_title}.')
             return redirect('projectphase1')
     else:
         form1 = ProjectPhase1Form()
     return render(request, 'project/project_phase1.html',
-                  {'form1': form1, 'needToUpdate': needToUpdate, 'queryset': queryset})
+                  {'form1': form1, 'needToUpdate': needToUpdate, 'queryset': queryset,
+                   'idt': idt,
+                   "needToUpdateidt": needToUpdateidt})
 
 
 class Phase1UpdateView(UpdateView):
@@ -248,31 +323,61 @@ class Phase1UpdateView(UpdateView):
     def form_valid(self, form):
         form.save()
         messages.success(
-            self.request, 'Your contact has been successfully created!')
+            self.request, 'Phase-I has been successfully created!')
         return redirect('projectphase1')
 
 
 def projectPhase2Creation(request):
-    queryset = ProjectPhase2.objects.filter(scrum_master=request.user.name)
-    print(queryset)
-    count = 0
     needToUpdate = False
-    for data in queryset:
-        if data:
-            count = count + 1
-        if count == 1:
-            needToUpdate = True
+    needToUpdateidt = False
+
+    queryset2 = Team.objects.filter(owner=(request.user.name + " " + request.user.email))
+    queryset3 = Team.objects.filter(partner=request.user.id)
+    idTitle = ""
+    if queryset2:
+        for data in queryset3 or queryset2:
+            idTitle = int(data.id)
+    if queryset3:
+        for data in queryset3 or queryset2:
+            idTitle = int(data.id)
+
+    queryset = ProjectPhase2.objects.filter(scrum_master=request.user.name)
+    idt = ProjectPhase2.objects.filter(project_title=idTitle)
+    print("==> idt ", idt)
+    # print(queryset)
+    count = 0
+    c1 = 0
+    if queryset:
+        for data in queryset:
+            proj_title = data.project_title
+            print("title from Project Syp when come from user.id", data.project_title)
+            if data:
+                count = count + 1
+            if count == 1:
+                needToUpdate = True
+    if idt:
+        for data in idt:
+            proj_title = data.project_title
+            print("title from Project when title comes from team", data.project_title)
+            if data:
+                c1 = c1 + 1
+            if c1 == 1:
+                needToUpdateidt = True
+    print(count, c1)
+    print(needToUpdate, needToUpdateidt)
     if request.method == 'POST':
         form2 = ProjectPhase2Form(request.POST, request.FILES)
         if form2.is_valid():
             form2.save()
             project_title = form2.cleaned_data.get('project_title')
-            messages.success(request, f'Account created for {project_title}.')
+            messages.success(request, f'Phase-II created for {project_title}.')
             return redirect('projectphase2')
     else:
         form2 = ProjectPhase2Form()
     return render(request, 'project/project_phase2.html',
-                  {'form2': form2, 'needToUpdate': needToUpdate, 'queryset': queryset})
+                  {'form2': form2, 'needToUpdate': needToUpdate, 'queryset': queryset,
+                   'idt': idt,
+                   "needToUpdateidt": needToUpdateidt})
 
 
 class Phase2UpdateView(UpdateView):
@@ -283,31 +388,61 @@ class Phase2UpdateView(UpdateView):
     def form_valid(self, form):
         form.save()
         messages.success(
-            self.request, 'Your contact has been successfully created!')
+            self.request, 'Phase-II content has been successfully created!')
         return redirect('projectphase2')
 
 
 def projectFinaleCreation(request):
-    queryset = ProjectFinale.objects.filter(scrum_master=request.user.name)
-    print(queryset)
-    count = 0
     needToUpdate = False
-    for data in queryset:
-        if data:
-            count = count + 1
-        if count == 1:
-            needToUpdate = True
+    needToUpdateidt = False
+
+    queryset2 = Team.objects.filter(owner=(request.user.name + " " + request.user.email))
+    queryset3 = Team.objects.filter(partner=request.user.id)
+    idTitle = ""
+    if queryset2:
+        for data in queryset3 or queryset2:
+            idTitle = int(data.id)
+    if queryset3:
+        for data in queryset3 or queryset2:
+            idTitle = int(data.id)
+
+    queryset = ProjectFinale.objects.filter(scrum_master=request.user.name)
+    idt = ProjectFinale.objects.filter(project_title=idTitle)
+    print("==> idt ", idt)
+    # print(queryset)
+    count = 0
+    c1 = 0
+    if queryset:
+        for data in queryset:
+            proj_title = data.project_title
+            print("title from Project Syp when come from user.id", data.project_title)
+            if data:
+                count = count + 1
+            if count == 1:
+                needToUpdate = True
+    if idt:
+        for data in idt:
+            proj_title = data.project_title
+            print("title from Project when title comes from team", data.project_title)
+            if data:
+                c1 = c1 + 1
+            if c1 == 1:
+                needToUpdateidt = True
+    print(count, c1)
+    print(needToUpdate, needToUpdateidt)
     if request.method == 'POST':
         formf = ProjectFinaleForm(request.POST, request.FILES)
         if formf.is_valid():
             formf.save()
             project_title = formf.cleaned_data.get('project_title')
-            messages.success(request, f'Account created for {project_title}.')
+            messages.success(request, f'Final Phase created for {project_title}.')
             return redirect('projectfinale')
     else:
         formf = ProjectFinaleForm()
     return render(request, 'project/project_finale.html',
-                  {'formf': formf, 'needToUpdate': needToUpdate, 'queryset': queryset})
+                  {'formf': formf, 'needToUpdate': needToUpdate, 'queryset': queryset,
+                   'idt': idt,
+                   "needToUpdateidt": needToUpdateidt})
 
 
 class FinalUpdateView(UpdateView):
@@ -318,5 +453,7 @@ class FinalUpdateView(UpdateView):
     def form_valid(self, form):
         form.save()
         messages.success(
-            self.request, 'Your contact has been successfully created!')
+            self.request, 'Final Phase content has been successfully created!')
         return redirect('projectfinale')
+
+

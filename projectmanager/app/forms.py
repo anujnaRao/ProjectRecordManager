@@ -1,7 +1,7 @@
 from django import forms
 
 from django.contrib.auth.forms import UserCreationForm
-from .models import Faculty, Student, ProjectSynopsis, ProjectPhase1, ProjectPhase2, ProjectFinale, Team
+from .models import Faculty, Student, ProjectSynopsis, ProjectPhase1, ProjectPhase2, ProjectFinale, Team, Logs
 from tinymce.widgets import TinyMCE
 
 
@@ -129,7 +129,6 @@ class ProjectFinaleForm(forms.ModelForm):
 
 
 class TeamCreationForm(forms.ModelForm):
-
     title = forms.CharField(label="Project Title", max_length=100, required=True, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Project Title'
@@ -138,3 +137,9 @@ class TeamCreationForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = ['title', 'owner', 'partner', 'guide']
+
+
+class LogCreationForm(forms.ModelForm):
+    class Meta:
+        model = Logs
+        fields = ['logs_by', 'tid', 'description']

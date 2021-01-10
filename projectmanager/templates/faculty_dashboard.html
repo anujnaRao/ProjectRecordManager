@@ -32,9 +32,7 @@
                                     <td>{{ data.owner }}</td>
                                     <td>{{ data.partner }}</td>
                                     <td>
-                                        {% for dt in docx %}
-                                        <a href="{% url 'updateSynopsis' dt %}" class="btn btn-info text-decoration-none">{{ docx }}</a>
-                                            {% endfor %}
+                                        <a href="{% url 'facultyCommentSynopsis' data.id %}" class="btn btn-info text-decoration-none">Synopsis</a>
                                     </td>
                                     <td>
                                         <a href="#" class="btn btn-info text-decoration-none">Phase 1</a>
@@ -50,9 +48,9 @@
                             </tbody>
                         </table>
 
-                    {% for data in docx %}
-                        {{ data }}
-                    {% endfor %}
+{#                    {% for data in docx %}#}
+{#                        {{ data }}#}
+{#                    {% endfor %}#}
                     </div>
                 </div>
             </div>
