@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} <title>Faculty View Synopsis</title>
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                {% if qs %}
+                    <table class="table table-active">
+                        <thead>
+                        <tr>
+                            <th>Project Title</th>
+                            <th>Created by</th>
+                            <th>Description</th>
+                            <th>Updated At</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for data in qs %}
+                            <tr>
+                            <td>{{ data.tid.title }}</td>
+                            <td>{{ data.logs_by }}</td>
+                            <td>{{ data.description }}</td>
+                            <td>{{ data.updated_at }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <h4 class="text-danger">{{ ret }}</h4>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

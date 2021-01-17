@@ -13,32 +13,41 @@ class Homepage(TemplateView):
 
 
 def StudentDashboard(request):
-    queryset2 = Team.objects.filter(owner=(request.user.name + " " + request.user.email))
-    queryset3 = Team.objects.filter(partner=request.user.id)
+    queryset1 = ""
+    queryset2 = ""
     idTitle = ""
-    if queryset2:
-        for data in queryset3 or queryset2:
-            idTitle = int(data.id)
-    if queryset3:
-        for data in queryset3 or queryset2:
-            idTitle = int(data.id)
+    idt = ""
+    form = ""
+    ret = ""
 
-    idt = Logs.objects.filter(tid=idTitle)
-    print("==> idt ", idt)
-    print("Q2",queryset2)
-    print("Q3", queryset3)
-    # qs1 =
-    if request.method == 'POST':
-        form = LogCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            ven = form.cleaned_data.get('logs_by')
-            print(ven)
-            messages.success(request, f'Log created for {ven}.')
-            return redirect('studentDashboard')
-    else:
-        form = LogCreationForm()
-    return render(request, 'student_dashboard.html', {'forml': form, 'idt':idt})
+    try:
+        queryset2 = Team.objects.filter(owner=(request.user.name + " " + request.user.email))
+        queryset3 = Team.objects.filter(partner=request.user.id)
+
+        if queryset2:
+            for data in queryset3 or queryset2:
+                idTitle = int(data.id)
+        if queryset3:
+            for data in queryset3 or queryset2:
+                idTitle = int(data.id)
+
+        idt = Logs.objects.filter(tid=idTitle)
+        print("==> idt ", idt)
+        print("Q2", queryset2)
+        print("Q3", queryset3)
+        if request.method == 'POST':
+            form = LogCreationForm(request.POST)
+            if form.is_valid():
+                form.save()
+                ven = form.cleaned_data.get('logs_by')
+                print(ven)
+                messages.success(request, f'Log created for {ven}.')
+                return redirect('studentDashboard')
+        else:
+            form = LogCreationForm()
+    except:
+        ret = "First create team to generate logs!!!"
+    return render(request, 'student_dashboard.html', {'forml': form, 'idt': idt, "ret": ret})
 
 
 def facultyDashboard(request):
@@ -76,7 +85,76 @@ def facultyCommentSynopsis(request, teamId):
         return redirect("facultyDashboard")
 
         # add form dictionary to context
-    return render(request, 'project/commentSynopsis.html', {'formc':form,'qs':queryset})
+    return render(request, 'project/commentSynopsis.html', {'formc': form, 'qs': queryset})
+
+
+def facultyCommentPhase1(request, teamId):
+    print("TeamId:", teamId)
+    queryset = ProjectPhase1.objects.filter(project_title=int(teamId))
+    print(queryset)
+    context = {}
+    obj = get_object_or_404(ProjectPhase1, project_title=int(teamId))
+    form = ProjectPhase1Form(request.POST or None, instance=obj)
+
+    # save the data from the form and
+    # redirect to detail_view
+    if form.is_valid():
+        form.save()
+        return redirect("facultyDashboard")
+
+        # add form dictionary to context
+    return render(request, 'project/commentPhase1.html', {'formc': form, 'qs': queryset})
+
+
+def facultyCommentPhase2(request, teamId):
+    print("TeamId:", teamId)
+    queryset = ProjectPhase2.objects.filter(project_title=int(teamId))
+    print(queryset)
+    context = {}
+    obj = get_object_or_404(ProjectPhase2, project_title=int(teamId))
+    form = ProjectPhase2Form(request.POST or None, instance=obj)
+
+    # save the data from the form and
+    # redirect to detail_view
+    if form.is_valid():
+        form.save()
+        return redirect("facultyDashboard")
+
+        # add form dictionary to context
+    return render(request, 'project/commentPhase2.html', {'formc': form, 'qs': queryset})
+
+
+def facultyCommentFinalPhase(request, teamId):
+    print("TeamId:", teamId)
+    queryset = ProjectFinale.objects.filter(project_title=int(teamId))
+    print(queryset)
+    context = {}
+    obj = get_object_or_404(ProjectFinale, project_title=int(teamId))
+    form = ProjectFinaleForm(request.POST or None, instance=obj)
+
+    # save the data from the form and
+    # redirect to detail_view
+    if form.is_valid():
+        form.save()
+        return redirect("facultyDashboard")
+
+        # add form dictionary to context
+    return render(request, 'project/commentFinalPhase.html', {'formc': form, 'qs': queryset})
+
+
+def facultyViewLogs(request, teamId):
+    print("TeamId:", teamId)
+    queryset = ""
+    ret = ""
+    try:
+        queryset = Logs.objects.filter(tid=int(teamId))
+        print(queryset)
+        for data in queryset:
+            print(data.description)
+    except:
+        ret = "No logs found"
+        print(ret)
+    return render(request, 'project/viewLogs.html', {'qs': queryset, "ret": ret})
 
 
 def Login(request):
@@ -159,7 +237,6 @@ def teamCreation(request):
             for data in queryset3:
                 print(data.partner)
                 print(queryset3)
-            # TODO:
             queryset2 = Team.objects.filter(guide=guide)
             count = 0
             facultyCountExceed = False
@@ -455,5 +532,3 @@ class FinalUpdateView(UpdateView):
         messages.success(
             self.request, 'Final Phase content has been successfully created!')
         return redirect('projectfinale')
-
-

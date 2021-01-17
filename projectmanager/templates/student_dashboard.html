@@ -21,31 +21,45 @@
                     <div class="card-header font-weight-bold " style="background:powderblue; color:black">Create Log :
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="">
-                            {% csrf_token %}
-
-                            <div id="div_id_logs_by" class="form-group">
-                                <label for="id_logs_by" class=" requiredField">
-                                    Logs by<span class="asteriskField">*</span>
-                                </label>
-                                <div class="">
-                                    <input type="text" name="logs_by" value="{{ request.user.name }}" maxlength="100"
-                                           class="textinput textInput form-control" id="id_logs_by" readonly>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ message }}
                                 </div>
-                            </div>
+                            {% endfor %}
+                        {% endif %}
 
-
-{#                            {{ forml.logs_by| as_crispy_field }}#}
-                            {{ forml.tid| as_crispy_field }}
-                            {{ forml.description| as_crispy_field }}
-                            <button type="submit" class="btn btn-info"> Create</button>
-                        </form>
+                        {% if forml %}
+                            <form method="POST" action="">
+                                {% csrf_token %}
+                                <div id="div_id_logs_by" class="form-group">
+                                    <label for="id_logs_by" class=" requiredField">
+                                        Logs by<span class="asteriskField">*</span>
+                                    </label>
+                                    <div class="">
+                                        <input type="text" name="logs_by" value="{{ request.user.name }}"
+                                               maxlength="100"
+                                               class="textinput textInput form-control" id="id_logs_by" readonly>
+                                    </div>
+                                </div>
+                                {#                            {{ forml.logs_by| as_crispy_field }}#}
+                                {{ forml.tid| as_crispy_field }}
+                                {{ forml.description| as_crispy_field }}
+                                <button type="submit" class="btn btn-info"> Create</button>
+                            </form>
+                        {% else %}
+                            <h4 class="text-danger">{{ ret }}</h4>
+                        {% endif %}
                     </div>
                 </div>
                 <hr>
                 <div class="card">
                     <div class="card-header font-weight-bold " style="background:powderblue; color:black">LOGS :</div>
                     <div class="card-body">
+
                         <table class="table table-borderless">
                             <thead>
                             <tr>
@@ -57,13 +71,14 @@
                             <tbody>
                             {% for data in idt %}
                                 <tr>
-                                <td>{{ data.logs_by }}</td>
-                                <td>{{ data.description }}</td>
-                                <td>{{ data.updated_at }}</td>
+                                    <td>{{ data.logs_by }}</td>
+                                    <td>{{ data.description }}</td>
+                                    <td>{{ data.updated_at }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
                         </table>
+
                     </div>
                 </div>
             </div>
@@ -81,8 +96,6 @@
                                 Team</a></li>
                             <li><a href="{% url 'index' %}" style="text-decoration: none; color:royalblue;">
                                 <em class="fas fa-home"></em> Home</a></li>
-                            <li><a href="#" style="text-decoration: none; color:royalblue;">
-                                <em class="fas fa-clipboard-list"></em> Kanban Board</a></li>
                             <li><a href="{% url 'projectsynopsis' %}" style="text-decoration: none; color:royalblue;">
                                 <em class="fas fa-file"></em> Synopsis</a></li>
                             <li><a href="{% url 'projectphase1' %}" style="text-decoration: none; color:royalblue;">

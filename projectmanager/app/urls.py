@@ -21,5 +21,9 @@ urlpatterns = [
     path('projectphase2/phase2Update/<int:pk>', views.Phase2UpdateView.as_view(), name="updatePhase2"),
     path('projectfinale/finaleUpdate/<int:pk>', views.FinalUpdateView.as_view(), name="updateFinale"),
     path('facultyCommentSynopsis/<int:teamId>', views.facultyCommentSynopsis, name="facultyCommentSynopsis"),
+    path('facultyCommentPhase1/<int:teamId>', views.facultyCommentPhase1, name="facultyCommentPhase1"),
+    path('facultyCommentPhase2/<int:teamId>', views.facultyCommentPhase2, name="facultyCommentPhase2"),
+    path('facultyCommentFinale/<int:teamId>', views.facultyCommentFinalPhase, name="facultyCommentFinale"),
+    path('facultyViewLogs/<int:teamId>', views.facultyViewLogs, name="facultyViewLogs"),
     path('logout/', views.logout, name="logout"),
 ]

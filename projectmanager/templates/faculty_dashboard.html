@@ -13,6 +13,16 @@
                         TEAM LIST
                     </div>
                     <div class="card-body">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                         <table class="table table-active table-responsive table-borderless">
                             <thead>
                             <tr>
@@ -32,25 +42,33 @@
                                     <td>{{ data.owner }}</td>
                                     <td>{{ data.partner }}</td>
                                     <td>
-                                        <a href="{% url 'facultyCommentSynopsis' data.id %}" class="btn btn-info text-decoration-none">Synopsis</a>
+                                        <a href="{% url 'facultyCommentSynopsis' data.id %}"
+                                           class="btn btn-info text-decoration-none">Synopsis</a>
                                     </td>
                                     <td>
-                                        <a href="#" class="btn btn-info text-decoration-none">Phase 1</a>
+                                        <a href="{% url 'facultyCommentPhase1' data.id %}"
+                                           class="btn btn-info text-decoration-none">Phase 1</a>
                                     </td>
                                     <td>
-                                        <a href="#" class="btn btn-info text-decoration-none">Phase 2</a>
+                                        <a href="{% url 'facultyCommentPhase2' data.id %}"
+                                           class="btn btn-info text-decoration-none">Phase 2</a>
                                     </td>
                                     <td>
-                                        <a href="#" class="btn btn-info text-decoration-none">Final Phase</a>
+                                        <a href="{% url 'facultyCommentFinale' data.id %}"
+                                           class="btn btn-info text-decoration-none">Final Phase</a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'facultyViewLogs' data.id %}"
+                                           class="btn btn-info text-decoration-none">Logs</a>
                                     </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
                         </table>
 
-{#                    {% for data in docx %}#}
-{#                        {{ data }}#}
-{#                    {% endfor %}#}
+                        {#                    {% for data in docx %}#}
+                        {#                        {{ data }}#}
+                        {#                    {% endfor %}#}
                     </div>
                 </div>
             </div>
