@@ -71,75 +71,96 @@ def facultyDashboard(request):
 
 
 def facultyCommentSynopsis(request, teamId):
-    print("TeamId:", teamId)
-    queryset = ProjectSynopsis.objects.filter(project_title=int(teamId))
-    print(queryset)
-    context = {}
-    obj = get_object_or_404(ProjectSynopsis, project_title=int(teamId))
-    form = ProjectSynopsisForm(request.POST or None, instance=obj)
+    queryset = ""
+    form = ""
+    ret = ""
+    try:
 
-    # save the data from the form and
-    # redirect to detail_view
-    if form.is_valid():
-        form.save()
-        return redirect("facultyDashboard")
+        print("TeamId:", teamId)
+        queryset = ProjectSynopsis.objects.filter(project_title=int(teamId))
+        print(queryset)
+        context = {}
+        obj = get_object_or_404(ProjectSynopsis, project_title=int(teamId))
+        form = ProjectSynopsisForm(request.POST or None, instance=obj)
 
+        # save the data from the form and
+        # redirect to detail_view
+        if form.is_valid():
+            form.save()
+            return redirect("facultyDashboard")
+    except:
         # add form dictionary to context
-    return render(request, 'project/commentSynopsis.html', {'formc': form, 'qs': queryset})
+        ret = "First create synopsis!!!"
+    return render(request, 'project/commentSynopsis.html', {'formc': form, 'qs': queryset, 'ret': ret})
 
 
 def facultyCommentPhase1(request, teamId):
-    print("TeamId:", teamId)
-    queryset = ProjectPhase1.objects.filter(project_title=int(teamId))
-    print(queryset)
-    context = {}
-    obj = get_object_or_404(ProjectPhase1, project_title=int(teamId))
-    form = ProjectPhase1Form(request.POST or None, instance=obj)
+    queryset = ""
+    form = ""
+    ret = ""
+    try:
+        print("TeamId:", teamId)
+        queryset = ProjectPhase1.objects.filter(project_title=int(teamId))
+        print(queryset)
+        context = {}
+        obj = get_object_or_404(ProjectPhase1, project_title=int(teamId))
+        form = ProjectPhase1Form(request.POST or None, instance=obj)
 
-    # save the data from the form and
-    # redirect to detail_view
-    if form.is_valid():
-        form.save()
-        return redirect("facultyDashboard")
-
+        # save the data from the form and
+        # redirect to detail_view
+        if form.is_valid():
+            form.save()
+            return redirect("facultyDashboard")
+    except:
+        ret = "First create phase1!!!"
         # add form dictionary to context
-    return render(request, 'project/commentPhase1.html', {'formc': form, 'qs': queryset})
+    return render(request, 'project/commentPhase1.html', {'formc': form, 'qs': queryset, 'ret': ret})
 
 
 def facultyCommentPhase2(request, teamId):
-    print("TeamId:", teamId)
-    queryset = ProjectPhase2.objects.filter(project_title=int(teamId))
-    print(queryset)
-    context = {}
-    obj = get_object_or_404(ProjectPhase2, project_title=int(teamId))
-    form = ProjectPhase2Form(request.POST or None, instance=obj)
+    queryset = ""
+    form = ""
+    ret = ""
+    try:
+        print("TeamId:", teamId)
+        queryset = ProjectPhase2.objects.filter(project_title=int(teamId))
+        print(queryset)
+        context = {}
+        obj = get_object_or_404(ProjectPhase2, project_title=int(teamId))
+        form = ProjectPhase2Form(request.POST or None, instance=obj)
 
-    # save the data from the form and
-    # redirect to detail_view
-    if form.is_valid():
-        form.save()
-        return redirect("facultyDashboard")
-
+        # save the data from the form and
+        # redirect to detail_view
+        if form.is_valid():
+            form.save()
+            return redirect("facultyDashboard")
+    except:
+        ret = "First create phase2!!!"
         # add form dictionary to context
-    return render(request, 'project/commentPhase2.html', {'formc': form, 'qs': queryset})
+    return render(request, 'project/commentPhase2.html', {'formc': form, 'qs': queryset, 'ret': ret})
 
 
 def facultyCommentFinalPhase(request, teamId):
-    print("TeamId:", teamId)
-    queryset = ProjectFinale.objects.filter(project_title=int(teamId))
-    print(queryset)
-    context = {}
-    obj = get_object_or_404(ProjectFinale, project_title=int(teamId))
-    form = ProjectFinaleForm(request.POST or None, instance=obj)
+    queryset = ""
+    form = ""
+    ret = ""
+    try:
+        print("TeamId:", teamId)
+        queryset = ProjectFinale.objects.filter(project_title=int(teamId))
+        print(queryset)
+        context = {}
+        obj = get_object_or_404(ProjectFinale, project_title=int(teamId))
+        form = ProjectFinaleForm(request.POST or None, instance=obj)
 
-    # save the data from the form and
-    # redirect to detail_view
-    if form.is_valid():
-        form.save()
-        return redirect("facultyDashboard")
-
+        # save the data from the form and
+        # redirect to detail_view
+        if form.is_valid():
+            form.save()
+            return redirect("facultyDashboard")
+    except:
+        ret = "First create Final Phase!!!"
         # add form dictionary to context
-    return render(request, 'project/commentFinalPhase.html', {'formc': form, 'qs': queryset})
+    return render(request, 'project/commentFinalPhase.html', {'formc': form, 'qs': queryset, 'ret': ret})
 
 
 def facultyViewLogs(request, teamId):

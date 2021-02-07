@@ -11,39 +11,59 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                {% if qs %}
+
+                    <form method="POST">
+                        <!-- Security token by Django -->
+                        {% csrf_token %}
+                        {% for data in qs %}
+                            <div id="div_id_scrum_master" class="form-group">
+
+                                <label for="id_scrum_master" class=" requiredField">
+                                    Scrum master<span class="asteriskField">*</span>
+                                </label>
+
+                                <div class="">
+                                    <input type="text" name="scrum_master" value="{{ data.scrum_master }}"
+                                           maxlength="100"
+                                           class="textinput textInput form-control" required="" id="id_scrum_master"
+                                           readonly>
+                                </div>
+                            </div>
+                            <div id="div_id_project_title" class="form-group">
+
+                                <label for="id_project_title" class=" requiredField">
+                                    Project title: <span class="badge p-2 m-1 font-weight-bolder"
+                                                         style="color: black;background-color: powderblue;"> {{ data.project_title.title }}</span>
+                                </label>
 
 
-    <form method="POST">
-        <!-- Security token by Django -->
-        {% csrf_token %}
-        {% for data in qs %}
-            <div id="div_id_scrum_master" class="form-group">
+                                <div class="">
+                                    <input type="text" name="project_title" class="form-control"
+                                           value="{{ data.project_title.id }}" id="id_project_title" readonly hidden/>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {{ formc.synopsis|as_crispy_field }}
 
-                <label for="id_scrum_master" class=" requiredField">
-                    Scrum master<span class="asteriskField">*</span>
-                </label>
+                        <div class="form-row">
+                            <div class="form-group col-md-8 mb-0 offset-1">
+                                <button type="submit" class="btn btn-block font-weight-bold"
+                                        style="background: royalblue;color: black; ">Update Details
+                                </button>
+                            </div>
+                        </div>
 
-                <div class="">
-                    <input type="text" name="scrum_master" value="{{ data.scrum_master }}" maxlength="100"
-                           class="textinput textInput form-control" required="" id="id_scrum_master" readonly>
-                </div>
+                    </form>
+                {% else %}
+                    <h4 class="text-danger">{{ ret }}</h4>
+                {% endif %}
             </div>
-            <div id="div_id_project_title" class="form-group">
+        </div>
+    </div>
 
-                <label for="id_project_title" class=" requiredField">
-                    Project title: <span class="badge p-2 m-1 font-weight-bolder" style="color: black;background-color: powderblue;"> {{ data.project_title.title }}</span>
-                </label>
-
-
-                <div class="">
-                    <input type="text" name="project_title" class="form-control" value="{{ data.project_title.id }}" id="id_project_title" readonly hidden/>
-                </div>
-            </div>
-        {% endfor %}
-        {{ formc.synopsis|as_crispy_field }}
-
-        <input type="submit" value="Update">
-
-    </form>
 
 {% endblock %}
